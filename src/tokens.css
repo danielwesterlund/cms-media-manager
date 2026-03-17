@@ -1,0 +1,203 @@
+:root {
+  /* Primitive scales */
+  --gray-0: #ffffff;
+  --gray-100: #f8fafc;
+  --gray-200: #eef3f6;
+  --gray-300: #d6e0e6;
+  --gray-400: #b7c7d3;
+  --gray-500: #94a3b8;
+  --gray-600: #64748b;
+  --gray-700: #475569;
+  --gray-800: #334155;
+  --gray-900: #0f172a;
+
+  --brand-primary-100: #f3fbfd;
+  --brand-primary-200: #e5f4f8;
+  --brand-primary-300: #d2ebf1;
+  --brand-primary-400: #c1e2ea;
+  --brand-primary-500: #abd6df;
+  --brand-primary-600: #84b6c0;
+  --brand-primary-700: #64919a;
+  --brand-primary-800: #4a6f76;
+  --brand-primary-900: #344f54;
+
+  --brand-secondary-100: #fae8ef;
+  --brand-secondary-200: #f4cedc;
+  --brand-secondary-300: #eca8bf;
+  --brand-secondary-400: #de7396;
+  --brand-secondary-500: #c3406a;
+  --brand-secondary-600: #a63157;
+  --brand-secondary-700: #842744;
+  --brand-secondary-800: #661e35;
+  --brand-secondary-900: #4a1627;
+
+  --blue-100: #e8edfa;
+  --blue-200: #d0daf5;
+  --blue-300: #afc0ec;
+  --blue-400: #7f98dc;
+  --blue-500: #3953b4;
+  --blue-600: #2f469a;
+  --blue-700: #273a7f;
+  --blue-800: #1f2d62;
+  --blue-900: #172248;
+
+  --red-100: #ffe8ed;
+  --red-200: #ffcfd9;
+  --red-300: #ffacbe;
+  --red-400: #ff7894;
+  --red-500: #d6002a;
+  --red-600: #b80023;
+  --red-700: #95001c;
+  --red-800: #730016;
+  --red-900: #550011;
+
+  --green-100: #eaf7ed;
+  --green-200: #d3efd9;
+  --green-300: #acdcb8;
+  --green-400: #73c48a;
+  --green-500: #1b8d2f;
+  --green-600: #167728;
+  --green-700: #125f21;
+  --green-800: #0d4919;
+  --green-900: #093412;
+
+  --orange-100: #feece4;
+  --orange-200: #fdd8c9;
+  --orange-300: #f9b394;
+  --orange-400: #ef7f4d;
+  --orange-500: #c94100;
+  --orange-600: #aa3700;
+  --orange-700: #892c00;
+  --orange-800: #6a2200;
+  --orange-900: #4d1900;
+
+  /* Shade aliases */
+  --brand-primary-lightest: var(--brand-primary-100);
+  --brand-primary-lighter: var(--brand-primary-200);
+  --brand-primary-light: var(--brand-primary-300);
+  --brand-primary-base: var(--brand-primary-500);
+  --brand-primary-dark: var(--brand-primary-700);
+  --brand-primary-darker: var(--brand-primary-800);
+  --brand-primary-darkest: var(--brand-primary-900);
+
+  --brand-secondary-lightest: var(--brand-secondary-100);
+  --brand-secondary-lighter: var(--brand-secondary-200);
+  --brand-secondary-light: var(--brand-secondary-300);
+  --brand-secondary-base: var(--brand-secondary-500);
+  --brand-secondary-dark: var(--brand-secondary-700);
+  --brand-secondary-darker: var(--brand-secondary-800);
+  --brand-secondary-darkest: var(--brand-secondary-900);
+
+  --blue-lightest: var(--blue-100);
+  --blue-lighter: var(--blue-200);
+  --blue-light: var(--blue-300);
+  --blue-base: var(--blue-500);
+  --blue-dark: var(--blue-700);
+  --blue-darker: var(--blue-800);
+  --blue-darkest: var(--blue-900);
+
+  --red-lightest: var(--red-100);
+  --red-lighter: var(--red-200);
+  --red-light: var(--red-300);
+  --red-base: var(--red-500);
+  --red-dark: var(--red-700);
+  --red-darker: var(--red-800);
+  --red-darkest: var(--red-900);
+
+  --green-lightest: var(--green-100);
+  --green-lighter: var(--green-200);
+  --green-light: var(--green-300);
+  --green-base: var(--green-500);
+  --green-dark: var(--green-700);
+  --green-darker: var(--green-800);
+  --green-darkest: var(--green-900);
+
+  --orange-lightest: var(--orange-100);
+  --orange-lighter: var(--orange-200);
+  --orange-light: var(--orange-300);
+  --orange-base: var(--orange-500);
+  --orange-dark: var(--orange-700);
+  --orange-darker: var(--orange-800);
+  --orange-darkest: var(--orange-900);
+
+  /* Semantic mappings */
+  --background: #f0f0e7;
+  --foreground: var(--gray-900);
+  --card: var(--gray-0);
+  --card-foreground: var(--gray-900);
+  --popover: var(--gray-0);
+  --popover-foreground: var(--gray-900);
+
+  --border: var(--gray-300);
+  --input: var(--gray-300);
+
+  --action: var(--brand-secondary-base);
+  --action-hover: var(--brand-secondary-dark);
+  --action-foreground: var(--gray-100);
+
+  --selection: var(--brand-primary-base);
+  --selection-soft: var(--brand-primary-lightest);
+  --selection-border: var(--brand-primary-dark);
+  --selection-foreground: var(--gray-900);
+
+  --primary: var(--brand-primary-base);
+  --primary-foreground: var(--selection-foreground);
+  --secondary: var(--action);
+  --secondary-foreground: var(--action-foreground);
+
+  --muted: var(--gray-200);
+  --muted-foreground: var(--gray-700);
+
+  --destructive: var(--red-base);
+  --destructive-foreground: var(--gray-100);
+  --success: var(--green-base);
+  --success-foreground: var(--gray-100);
+  --warning: var(--orange-base);
+  --warning-foreground: var(--gray-100);
+  --info: var(--blue-base);
+  --info-foreground: var(--gray-100);
+
+  --ring: var(--action);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+
+  --color-action: var(--action);
+  --color-action-hover: var(--action-hover);
+  --color-action-foreground: var(--action-foreground);
+
+  --color-selection: var(--selection);
+  --color-selection-soft: var(--selection-soft);
+  --color-selection-border: var(--selection-border);
+  --color-selection-foreground: var(--selection-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+
+  --color-ring: var(--ring);
+}
