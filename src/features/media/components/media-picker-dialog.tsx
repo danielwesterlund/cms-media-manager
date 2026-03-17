@@ -26,15 +26,15 @@ export function MediaPickerDialog({
 
   return (
     <ModalShell className="max-w-lg" onOpenChange={onOpenChange} open={open} titleId="media-picker-dialog-title">
-      <h2 className="text-base font-semibold" id="media-picker-dialog-title">
+      <h2 className="ui-type-body-1-strong" id="media-picker-dialog-title">
         {title}
       </h2>
-      <p className="mt-1 text-sm text-muted-foreground">Pick media and confirm selection.</p>
+      <p className="ui-type-body-2 ui-type-muted mt-1">Pick media and confirm selection.</p>
 
       {context === 'attachments' ? (
         <AttachmentsOrderEditor ids={attachmentsSelectionOrderedIds} onChange={onChangeAttachmentsOrder} />
       ) : (
-        <p className="mt-4 text-sm text-muted-foreground">Picker content placeholder for {context} context.</p>
+        <p className="ui-type-body-2 ui-type-muted mt-4">Picker content placeholder for {context} context.</p>
       )}
 
       <div className="mt-4 flex justify-end gap-2">
@@ -59,13 +59,13 @@ function AttachmentsOrderEditor({ ids, onChange }: { ids: string[]; onChange: (i
   };
 
   if (ids.length === 0) {
-    return <p className="mt-4 text-sm text-muted-foreground">No attachments selected yet.</p>;
+    return <p className="ui-type-body-2 ui-type-muted mt-4">No attachments selected yet.</p>;
   }
 
   return (
     <section aria-label="Reorder attachments" className="mt-4 space-y-2">
-      <h3 className="text-sm font-medium">Attachment Order</h3>
-      <p className="text-xs text-muted-foreground">Use ArrowUp / ArrowDown on a row to reorder.</p>
+      <h3 className="ui-type-body-2-strong">Attachment Order</h3>
+      <p className="ui-type-small-1 ui-type-muted">Use ArrowUp / ArrowDown on a row to reorder.</p>
       <ol className="space-y-2">
         {ids.map((id, index) => (
           <li key={id}>
@@ -83,7 +83,7 @@ function AttachmentsOrderEditor({ ids, onChange }: { ids: string[]; onChange: (i
               }}
               tabIndex={0}
             >
-              <span className="truncate text-sm">{id}</span>
+              <span className="ui-type-body-2 truncate">{id}</span>
               <div className="flex gap-1">
                 <button aria-label={`Move ${id} up`} className={mediaButton({ variant: 'outline', size: 'sm' })} onClick={() => move(index, -1)} type="button">
                   Up

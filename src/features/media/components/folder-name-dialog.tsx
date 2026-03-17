@@ -1,3 +1,4 @@
+import { Input } from '@/components/ui/input';
 import { mediaButton } from '@/features/media/components/media-ui.variants';
 import { useEffect, useState } from 'react';
 
@@ -33,14 +34,14 @@ export function FolderNameDialog({
 
   return (
     <ModalShell onOpenChange={onOpenChange} open={open} titleId="folder-name-dialog-title">
-      <h2 className="text-base font-semibold" id="folder-name-dialog-title">
+      <h2 className="ui-type-body-1-strong" id="folder-name-dialog-title">
         {title ?? (mode === 'create' ? 'Create folder' : 'Rename folder')}
       </h2>
-      <label className="mt-3 block text-sm">
+      <label className="ui-type-body-2 mt-3 block">
         Folder name
-        <input
+        <Input
           autoFocus
-          className="mt-1 h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+          className="mt-1"
           onChange={(event) => setName(event.target.value)}
           value={name}
         />

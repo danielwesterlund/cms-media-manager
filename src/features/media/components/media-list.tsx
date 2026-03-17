@@ -10,8 +10,8 @@ type MediaListProps = {
   assets: Asset[];
   selectedAssetIds: string[];
   loading?: boolean;
-  onToggleSelect: (assetId: string) => void;
-  onOpenDetail: (assetId: string) => void;
+  onActivateAsset: (assetId: string, intent: 'single' | 'toggle' | 'range') => void;
+  onConfirmAsset: (assetId: string) => void;
   onDragStartAsset?: (assetId: string, event: DragEvent<HTMLElement>) => void;
   onDragEndAsset?: (assetId: string) => void;
   onFilesDropped?: (files: File[]) => void;
@@ -25,8 +25,8 @@ export function MediaList({
   assets,
   selectedAssetIds,
   loading = false,
-  onToggleSelect,
-  onOpenDetail,
+  onActivateAsset,
+  onConfirmAsset,
   onDragStartAsset,
   onDragEndAsset,
   onFilesDropped,
@@ -47,7 +47,7 @@ export function MediaList({
 
   if (assets.length === 0) {
     return (
-      <section className={cn(mediaPanel(), 'border-dashed p-8 text-center text-sm text-muted-foreground')}>
+      <section className={cn(mediaPanel(), 'ui-type-body-2 ui-type-muted border-dashed p-8 text-center')}>
         {emptyMessage}
       </section>
     );
@@ -71,17 +71,17 @@ export function MediaList({
       onDrop={onDrop}
     >
       {assets.length > 120 ? (
-        <p className="mb-2 text-xs text-muted-foreground">Large list detected. Consider react-window virtualization.</p>
+        <p className="ui-type-small-1 ui-type-muted mb-2">Large list detected. Consider react-window virtualization.</p>
       ) : null}
       <ul className="space-y-2">
         {assets.map((asset) => (
           <MediaRow
             key={asset.id}
             asset={asset}
+            onActivateAsset={onActivateAsset}
+            onConfirmAsset={onConfirmAsset}
             onDragEndAsset={onDragEndAsset}
             onDragStartAsset={onDragStartAsset}
-            onOpenDetail={onOpenDetail}
-            onToggleSelect={onToggleSelect}
             selected={selected.has(asset.id)}
           />
         ))}

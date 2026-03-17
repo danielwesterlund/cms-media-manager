@@ -13,8 +13,8 @@ export function AssetUsagePanel({ usage }: AssetUsagePanelProps) {
 
   return (
     <section className="rounded-lg border border-border bg-card p-3" aria-label="Usage summary">
-      <h3 className="text-sm font-semibold">Usage Summary</h3>
-      <p className="mt-1 text-xs text-muted-foreground">Breakdown by collection type</p>
+      <h3 className="ui-type-body-2-strong">Usage Summary</h3>
+      <p className="ui-type-small-1 ui-type-muted mt-1">Breakdown by collection type</p>
 
       <div className="mt-3 flex flex-col gap-3 md:flex-row md:items-center">
         <CollectionDonutChart rows={rows} total={total} />
@@ -22,12 +22,12 @@ export function AssetUsagePanel({ usage }: AssetUsagePanelProps) {
           {rows.map((row) => {
             const pct = total > 0 ? Math.round((row.total / total) * 100) : 0;
             return (
-              <p className="truncate text-sm" key={row.label}>
-                <span className="font-medium">{row.label}:</span> {row.total} ({pct}%)
+              <p className="ui-type-body-2 truncate" key={row.label}>
+                <span className="ui-type-body-2-strong">{row.label}:</span> {row.total} ({pct}%)
               </p>
             );
           })}
-          <p className="text-xs text-muted-foreground">Total references: {total}</p>
+          <p className="ui-type-small-1 ui-type-muted">Total references: {total}</p>
         </div>
       </div>
     </section>
@@ -96,10 +96,10 @@ function CollectionDonutChart({ rows, total }: { rows: Array<{ label: string; to
           transform="rotate(-90 32 32)"
         />
       ))}
-      <text className="fill-foreground text-[8px]" textAnchor="middle" x="32" y="33">
+      <text className="fill-foreground ui-type-small-1" textAnchor="middle" x="32" y="33">
         {total}
       </text>
-      <text className="fill-muted-foreground text-[6px]" textAnchor="middle" x="32" y="40">
+      <text className="fill-muted-foreground ui-type-small-1" textAnchor="middle" x="32" y="40">
         Uses
       </text>
     </svg>

@@ -10,8 +10,8 @@ type MediaGridProps = {
   assets: Asset[];
   selectedAssetIds: string[];
   loading?: boolean;
-  onToggleSelect: (assetId: string) => void;
-  onOpenDetail: (assetId: string) => void;
+  onActivateAsset: (assetId: string, intent: 'single' | 'toggle' | 'range') => void;
+  onConfirmAsset: (assetId: string) => void;
   onDragStartAsset?: (assetId: string, event: DragEvent<HTMLElement>) => void;
   onDragEndAsset?: (assetId: string) => void;
   onFilesDropped?: (files: File[]) => void;
@@ -25,8 +25,8 @@ export function MediaGrid({
   assets,
   selectedAssetIds,
   loading = false,
-  onToggleSelect,
-  onOpenDetail,
+  onActivateAsset,
+  onConfirmAsset,
   onDragStartAsset,
   onDragEndAsset,
   onFilesDropped,
@@ -47,7 +47,7 @@ export function MediaGrid({
 
   if (assets.length === 0) {
     return (
-      <section className={cn(mediaPanel(), 'border-dashed p-8 text-center text-sm text-muted-foreground')}>
+      <section className={cn(mediaPanel(), 'ui-type-body-2 ui-type-muted border-dashed p-8 text-center')}>
         {emptyMessage}
       </section>
     );
@@ -75,10 +75,10 @@ export function MediaGrid({
           <li key={asset.id}>
             <MediaCard
               asset={asset}
+              onActivateAsset={onActivateAsset}
+              onConfirmAsset={onConfirmAsset}
               onDragEndAsset={onDragEndAsset}
               onDragStartAsset={onDragStartAsset}
-              onOpenDetail={onOpenDetail}
-              onToggleSelect={onToggleSelect}
               selected={selected.has(asset.id)}
             />
           </li>

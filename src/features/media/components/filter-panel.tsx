@@ -1,8 +1,12 @@
 import { useMemo, useState } from 'react';
 
+import { AccordionItem } from '@/components/ui/accordion';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { RadioGroup } from '@/components/ui/radio';
 import type { AssetKind } from '@/features/media/domain/media.types';
 import type { ComponentTag, Domain, LegacySystem, TechnologyArea, Topic } from '@/features/media/domain/media.constants';
-import { mediaButton, mediaChip, mediaPanel } from '@/features/media/components/media-ui.variants';
+import { mediaButton, mediaPanel } from '@/features/media/components/media-ui.variants';
 import { cn } from '@/lib/cn';
 
 export type MediaFilterState = {
@@ -41,7 +45,7 @@ export function FilterPanel({ value, options, onChange }: FilterPanelProps) {
   return (
     <section aria-label="Filters" className={cn(mediaPanel(), 'p-3')}>
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-sm font-semibold">Filters</h2>
+        <h2 className="ui-type-body-2-strong">Filters</h2>
         <button className={mediaButton({ variant: 'ghost', size: 'sm' })} onClick={() => onChange(emptyFilters())} type="button">
           Clear all
         </button>
@@ -50,6 +54,7 @@ export function FilterPanel({ value, options, onChange }: FilterPanelProps) {
       <div className="space-y-3">
         <SearchableMultiSelectSection
           label="File Type"
+          defaultOpen
           onChange={(next) => onChange({ ...value, fileTypes: next })}
           onClear={() => onChange({ ...value, fileTypes: [] })}
           options={options.fileTypes}
@@ -98,19 +103,32 @@ export function FilterPanel({ value, options, onChange }: FilterPanelProps) {
           selected={value.components}
         />
 
-        <section>
-          <div className="mb-1 flex items-center justify-between">
-            <h3 className="text-sm font-medium">Legacy</h3>
-            <button className={mediaButton({ variant: 'ghost', size: 'sm' })} onClick={() => onChange({ ...value, legacy: null })} type="button">
-              Clear
-            </button>
-          </div>
-          <div className="flex gap-2">
-            <LegacyButton active={value.legacy === null} label="Any" onClick={() => onChange({ ...value, legacy: null })} />
-            <LegacyButton active={value.legacy === true} label="Yes" onClick={() => onChange({ ...value, legacy: true })} />
-            <LegacyButton active={value.legacy === false} label="No" onClick={() => onChange({ ...value, legacy: false })} />
-          </div>
-        </section>
+        <AccordionItem
+          actionLabel="Clear"
+          badgeCount={value.legacy !== null ? 1 : 0}
+          defaultOpen
+          id="filters-legacy"
+          onActionClick={() => onChange({ ...value, legacy: null })}
+          title="Legacy"
+        >
+          <RadioGroup
+            className="ui-radio-group"
+            name="legacy-filter"
+            onValueChange={(next) =>
+              onChange({
+                ...value,
+                legacy: next === 'any' ? null : next === 'yes'
+              })
+            }
+            options={[
+              { value: 'any', label: 'Any' },
+              { value: 'yes', label: 'Yes' },
+              { value: 'no', label: 'No' }
+            ]}
+            orientation="horizontal"
+            value={value.legacy === null ? 'any' : value.legacy ? 'yes' : 'no'}
+          />
+        </AccordionItem>
 
         <SearchableMultiSelectSection
           label="Legacy System"
@@ -129,13 +147,15 @@ function SearchableMultiSelectSection<TOption extends string>({
   options,
   selected,
   onChange,
-  onClear
+  onClear,
+  defaultOpen = false
 }: {
   label: string;
   options: readonly TOption[];
   selected: TOption[];
   onChange: (next: TOption[]) => void;
   onClear: () => void;
+  defaultOpen?: boolean;
 }) {
   const [query, setQuery] = useState('');
   const filtered = useMemo(
@@ -144,50 +164,35 @@ function SearchableMultiSelectSection<TOption extends string>({
   );
 
   return (
-    <section>
-      <div className="mb-1 flex items-center justify-between">
-        <h3 className="text-sm font-medium">{label}</h3>
-        <button className={mediaButton({ variant: 'ghost', size: 'sm' })} onClick={onClear} type="button">
-          Clear
-        </button>
-      </div>
-      <input
-        className="mb-1 h-8 w-full rounded border border-input px-2 text-xs"
+    <AccordionItem
+      actionLabel="Clear"
+      badgeCount={selected.length}
+      defaultOpen={defaultOpen}
+      id={`filters-${label.toLowerCase().replace(/\s+/g, '-')}`}
+      onActionClick={onClear}
+      title={label}
+    >
+      <Input
+        className="mb-2 h-8 px-2"
         onChange={(event) => setQuery(event.target.value)}
         placeholder={`Search ${label.toLowerCase()}...`}
         type="search"
         value={query}
       />
-      <div className="max-h-32 space-y-1 overflow-auto rounded border border-border p-2">
+      <div className="max-h-36 space-y-1 overflow-auto rounded border border-border bg-background p-2">
         {filtered.map((option) => {
           const checked = selected.includes(option);
           return (
-            <label className="flex items-center gap-2 text-xs" key={option}>
-              <input
-                checked={checked}
-                onChange={() =>
-                  onChange(checked ? selected.filter((item) => item !== option) : [...selected, option])
-                }
-                type="checkbox"
-              />
-              <span>{option}</span>
-            </label>
+            <Checkbox
+              checked={checked}
+              key={option}
+              label={option}
+              onChange={() => onChange(checked ? selected.filter((item) => item !== option) : [...selected, option])}
+            />
           );
         })}
       </div>
-    </section>
-  );
-}
-
-function LegacyButton({ active, label, onClick }: { active: boolean; label: string; onClick: () => void }) {
-  return (
-    <button
-      className={mediaChip({ tone: active ? 'selected' : 'neutral' })}
-      onClick={onClick}
-      type="button"
-    >
-      {label}
-    </button>
+    </AccordionItem>
   );
 }
 

@@ -2,7 +2,7 @@ import { useMemo, useRef, useState, type DragEvent } from 'react';
 
 import { AssetDetailSheetContainer } from '@/features/media/components/asset-detail-sheet-container';
 import { EmptyPlaceholder } from '@/features/media/components/empty-placeholder';
-import { FilterPanel, emptyFilters, type FilterPanelOptions, type MediaFilterState } from '@/features/media/components/filter-panel';
+import { emptyFilters, type MediaFilterState } from '@/features/media/components/filter-panel';
 import { FolderTreePanelContainer } from '@/features/media/components/folder-tree-panel-container';
 import { MediaGrid } from '@/features/media/components/media-grid';
 import { MediaList } from '@/features/media/components/media-list';
@@ -10,30 +10,27 @@ import { MediaToolbar, type ActiveFilterChip, type MediaSortValue } from '@/feat
 import { MediaPickerDialog } from '@/features/media/components/media-picker-dialog';
 import { UploadTray } from '@/features/media/components/upload-tray';
 import type { AssetKind, AssetSort } from '@/features/media/domain/media.types';
-import { COMPONENTS, DOMAINS, LEGACY_SYSTEMS, TAG_SUGGESTIONS, TECHNOLOGY_AREAS, TOPICS } from '@/features/media/domain/media.constants';
+import { DOMAINS, TAG_SUGGESTIONS, TOPICS } from '@/features/media/domain/media.constants';
 import { useAssetsQuery } from '@/features/media/hooks/use-assets-query';
 import { useUploadController } from '@/features/media/hooks/use-upload-controller';
 import { mediaUiSelectors, useMediaUiActions, useMediaUiStore } from '@/features/media/state/media-ui.store';
-import { mediaPanel } from '@/features/media/components/media-ui.variants';
 
-const FILTER_OPTIONS: FilterPanelOptions = {
-  fileTypes: ['image', 'pdf', 'office', 'tableau', 'powerbi', 'audio'],
-  domains: [...DOMAINS],
-  topics: [...TOPICS],
-  licenses: ['Internal', 'CC-BY', 'CC-BY-SA', 'Royalty Free'],
-  tags: [...TAG_SUGGESTIONS],
-  technologyAreas: [...TECHNOLOGY_AREAS],
-  components: [...COMPONENTS],
-  legacySystems: [...LEGACY_SYSTEMS]
+type MediaManagerShellProps = {
+  onAssetConfirmed?: (assetId: string) => void;
+  initialFileTypes?: AssetKind[];
 };
 
-export function MediaManagerShell() {
+const LICENSE_OPTIONS = ['Internal', 'CC-BY', 'CC-BY-SA', 'Royalty Free'];
+
+export function MediaManagerShell({ onAssetConfirmed, initialFileTypes = [] }: MediaManagerShellProps) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [searchText, setSearchText] = useState('');
   const [sortValue, setSortValue] = useState<MediaSortValue>('updatedAt-desc');
-  const [filters, setFilters] = useState<MediaFilterState>(emptyFilters());
+  const [filters, setFilters] = useState<MediaFilterState>(() => ({
+    ...emptyFilters(),
+    fileTypes: initialFileTypes
+  }));
   const viewMode = useMediaUiStore(mediaUiSelectors.viewMode);
-  const filterPanelOpen = useMediaUiStore(mediaUiSelectors.filterPanelOpen);
   const activeFolderId = useMediaUiStore(mediaUiSelectors.activeFolderId);
   const selectedAssetIds = useMediaUiStore(mediaUiSelectors.selectedAssetIds);
   const uploadJobs = useMediaUiStore(mediaUiSelectors.uploadTray);
@@ -54,6 +51,39 @@ export function MediaManagerShell() {
   });
 
   const assets = assetsQuery.data?.items ?? [];
+  const orderedAssetIds = useMemo(() => assets.map((asset) => asset.id), [assets]);
+
+  const handleActivateAsset = (assetId: string, intent: 'single' | 'toggle' | 'range') => {
+    if (intent === 'single') {
+      actions.selectAsset(assetId);
+      actions.openAssetDetail(assetId);
+      return;
+    }
+
+    if (intent === 'range') {
+      actions.selectRange(orderedAssetIds, assetId);
+      actions.openAssetDetail(assetId);
+      return;
+    }
+
+    const wasSelected = selectedAssetIds.includes(assetId);
+    const nextSelectedAssetIds = wasSelected
+      ? selectedAssetIds.filter((id) => id !== assetId)
+      : [...selectedAssetIds, assetId];
+
+    actions.toggleAsset(assetId);
+    if (nextSelectedAssetIds.length === 0) {
+      actions.closeAssetDetail();
+      return;
+    }
+    actions.openAssetDetail(assetId);
+  };
+
+  const handleConfirmAsset = (assetId: string) => {
+    actions.selectAsset(assetId);
+    actions.openAssetDetail(assetId);
+    onAssetConfirmed?.(assetId);
+  };
 
   const onFileSelection = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
@@ -68,21 +98,72 @@ export function MediaManagerShell() {
 
   return (
     <section aria-label="Media manager" className="flex h-full min-h-0 flex-col gap-3">
-      <header className="sticky top-0 z-20 bg-background pb-1">
+      <header className="sticky top-0 z-20 bg-card pb-1">
         <MediaToolbar
           activeFilterChips={activeFilterChips}
-          filterPanelOpen={filterPanelOpen}
-          onBulkActionsClick={() => undefined}
+          fileTypeFilters={filters.fileTypes}
+          domainFilters={filters.domains}
+          domainOptions={[...DOMAINS]}
+          licenseFilters={filters.licenses}
+          licenseOptions={LICENSE_OPTIONS}
           onClearAllFilters={() => setFilters(emptyFilters())}
+          onResetDomainFilters={() => setFilters((current) => ({ ...current, domains: [] }))}
+          onResetLicenseFilters={() => setFilters((current) => ({ ...current, licenses: [] }))}
           onRemoveFilterChip={(chipId) => setFilters((current) => removeChip(current, chipId))}
           onSearchChange={setSearchText}
           onSortChange={setSortValue}
-          onToggleFilterPanel={() => actions.setFilterPanelOpen(!filterPanelOpen)}
+          onResetTagFilters={() => setFilters((current) => ({ ...current, tags: [] }))}
+          onResetTopicFilters={() => setFilters((current) => ({ ...current, topics: [] }))}
+          onResetFileTypeFilters={() => setFilters((current) => ({ ...current, fileTypes: [] }))}
+          onToggleDomainFilter={(value) =>
+            setFilters((current) => ({
+              ...current,
+              domains: current.domains.includes(value as (typeof DOMAINS)[number])
+                ? current.domains.filter((item) => item !== value)
+                : [...current.domains, value as (typeof DOMAINS)[number]]
+            }))
+          }
+          onToggleFileTypeFilter={(kind) =>
+            setFilters((current) => ({
+              ...current,
+              fileTypes: current.fileTypes.includes(kind)
+                ? current.fileTypes.filter((value) => value !== kind)
+                : [...current.fileTypes, kind]
+            }))
+          }
+          onToggleLicenseFilter={(value) =>
+            setFilters((current) => ({
+              ...current,
+              licenses: current.licenses.includes(value)
+                ? current.licenses.filter((item) => item !== value)
+                : [...current.licenses, value]
+            }))
+          }
+          onToggleTagFilter={(value) =>
+            setFilters((current) => ({
+              ...current,
+              tags: current.tags.includes(value)
+                ? current.tags.filter((item) => item !== value)
+                : [...current.tags, value]
+            }))
+          }
+          onToggleTopicFilter={(value) =>
+            setFilters((current) => ({
+              ...current,
+              topics: current.topics.includes(value as (typeof TOPICS)[number])
+                ? current.topics.filter((item) => item !== value)
+                : [...current.topics, value as (typeof TOPICS)[number]]
+            }))
+          }
+          tagFilters={filters.tags}
+          tagOptions={[...TAG_SUGGESTIONS]}
           onToggleViewMode={actions.toggleViewMode}
           onUploadClick={() => fileInputRef.current?.click()}
           searchText={searchText}
           selectedCount={selectedAssetIds.length}
           sortValue={sortValue}
+          topicFilters={filters.topics}
+          topicOptions={[...TOPICS]}
           viewMode={viewMode}
         />
         <input
@@ -108,27 +189,27 @@ export function MediaManagerShell() {
           ) : viewMode === 'grid' ? (
             <MediaGrid
               assets={assets}
+              onActivateAsset={handleActivateAsset}
+              onConfirmAsset={handleConfirmAsset}
               onDragStartAsset={onDragStartAsset}
               loading={assetsQuery.isLoading}
               onFilesDropped={(files) => void uploadController.startUpload(files, null)}
-              onOpenDetail={actions.openAssetDetail}
-              onToggleSelect={actions.toggleAsset}
               selectedAssetIds={selectedAssetIds}
             />
           ) : (
             <MediaList
               assets={assets}
+              onActivateAsset={handleActivateAsset}
+              onConfirmAsset={handleConfirmAsset}
               onDragStartAsset={onDragStartAsset}
               loading={assetsQuery.isLoading}
               onFilesDropped={(files) => void uploadController.startUpload(files, null)}
-              onOpenDetail={actions.openAssetDetail}
-              onToggleSelect={actions.toggleAsset}
               selectedAssetIds={selectedAssetIds}
             />
           )}
 
           {assets.length > 120 ? (
-            <p className="mt-3 text-xs text-muted-foreground">Large list detected. Consider react-window virtualization.</p>
+            <p className="ui-type-small-1 ui-type-muted mt-3">Large list detected. Consider react-window virtualization.</p>
           ) : null}
 
           {uploadJobs.length > 0 ? (
@@ -145,36 +226,6 @@ export function MediaManagerShell() {
         </main>
 
         <aside aria-label="Inspector" className="min-h-0 space-y-3 overflow-auto">
-          {filterPanelOpen ? (
-            <section className="relative">
-              <button
-                aria-label="Collapse filters"
-                aria-expanded={filterPanelOpen}
-                className="absolute right-2 top-2 z-10 inline-flex h-7 w-7 items-center justify-center rounded-md border border-input bg-background text-muted-foreground hover:bg-muted"
-                onClick={() => actions.setFilterPanelOpen(false)}
-                type="button"
-              >
-                <span aria-hidden="true" className="material-symbols-outlined text-sm">expand_less</span>
-              </button>
-              <FilterPanel onChange={setFilters} options={FILTER_OPTIONS} value={filters} />
-            </section>
-          ) : (
-            <section className={mediaPanel()}>
-              <div className="flex items-center justify-between px-3 py-2">
-                <h2 className="text-sm font-semibold">Filters</h2>
-                <button
-                  aria-label="Expand filters"
-                  aria-expanded={filterPanelOpen}
-                  className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-input text-muted-foreground hover:bg-muted"
-                  onClick={() => actions.setFilterPanelOpen(true)}
-                  type="button"
-                >
-                  <span aria-hidden="true" className="material-symbols-outlined text-sm">expand_more</span>
-                </button>
-              </div>
-            </section>
-          )}
-
           <section>
             <AssetDetailSheetContainer />
           </section>

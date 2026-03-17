@@ -2,12 +2,15 @@ import { useMemo, type ReactNode } from 'react';
 import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import { Input } from '@/components/ui/input';
+import { Select } from '@/components/ui/select';
+import { Tag } from '@/components/ui/tag';
 import {
   assetEditableMetadataSchema,
   type AssetEditableMetadata
 } from '@/features/media/domain/media.schemas';
 import { COMPONENTS, DOMAINS, TECHNOLOGY_AREAS, TOPICS } from '@/features/media/domain/media.constants';
-import { mediaButton, mediaChip } from '@/features/media/components/media-ui.variants';
+import { mediaButton } from '@/features/media/components/media-ui.variants';
 import { TagsChipInput } from '@/features/media/components/tags-chip-input';
 
 type AssetMetadataFormProps = {
@@ -40,31 +43,31 @@ export function AssetMetadataForm({ defaultValues, submitting = false, onSubmit 
   return (
     <form className="space-y-3" onSubmit={handleSubmit(submit)}>
       <FormField label="Title" error={errors.title?.message}>
-        <input className="h-9 w-full rounded-md border border-input px-3 text-sm" {...register('title')} />
+        <Input {...register('title')} />
       </FormField>
 
       <FormField label="Credits/Source" error={errors.creditsSource?.message}>
-        <input className="h-9 w-full rounded-md border border-input px-3 text-sm" {...register('creditsSource')} />
+        <Input {...register('creditsSource')} />
       </FormField>
 
       <FormField label="License" error={errors.license?.message}>
-        <select className="h-9 w-full rounded-md border border-input px-3 text-sm" {...register('license')}>
+        <Select {...register('license')}>
           {KNOWN_LICENSES.map((license) => (
             <option key={license} value={license}>
               {license}
             </option>
           ))}
-        </select>
+        </Select>
       </FormField>
 
       <FormField label="Domain" error={errors.domain?.message}>
-        <select className="h-9 w-full rounded-md border border-input px-3 text-sm" {...register('domain')}>
+        <Select {...register('domain')}>
           {DOMAINS.map((option) => (
             <option key={option} value={option}>
               {option}
             </option>
           ))}
-        </select>
+        </Select>
       </FormField>
 
       <FormField label="Topics">
@@ -125,9 +128,9 @@ export function AssetMetadataForm({ defaultValues, submitting = false, onSubmit 
 function FormField({ label, error, children }: { label: string; error?: string; children: ReactNode }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-sm font-medium">{label}</span>
+      <span className="ui-type-body-2-strong mb-1 block">{label}</span>
       {children}
-      {error ? <span className="mt-1 block text-xs text-destructive">{error}</span> : null}
+      {error ? <span className="ui-type-small-1 ui-type-danger mt-1 block">{error}</span> : null}
     </label>
   );
 }
@@ -146,17 +149,18 @@ function MultiSelectChips({
       {options.map((option) => {
         const selected = value.includes(option);
         return (
-          <button
-            className={mediaChip({ tone: selected ? 'selected' : 'neutral' })}
+          <Tag
+            as="button"
+            clickable
             key={option}
             onClick={(event) => {
               event.preventDefault();
               onChange(selected ? value.filter((item) => item !== option) : [...value, option]);
             }}
-            type="button"
+            tone={selected ? 'primary' : 'gray'}
           >
             {option}
-          </button>
+          </Tag>
         );
       })}
     </div>

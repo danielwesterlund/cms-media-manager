@@ -1,6 +1,5 @@
 import { useEffect, useRef, type KeyboardEvent, type ReactNode } from 'react';
 
-import { mediaPanel } from '@/features/media/components/media-ui.variants';
 import { cn } from '@/lib/cn';
 
 type ModalShellProps = {
@@ -9,12 +8,13 @@ type ModalShellProps = {
   onOpenChange: (open: boolean) => void;
   children: ReactNode;
   className?: string;
+  fullScreen?: boolean;
 };
 
 /**
  * Accessible modal shell with focus trap, escape close, and focus restore.
  */
-export function ModalShell({ open, titleId, onOpenChange, children, className }: ModalShellProps) {
+export function ModalShell({ open, titleId, onOpenChange, children, className, fullScreen = false }: ModalShellProps) {
   const containerRef = useRef<HTMLElement | null>(null);
   const previousFocusedRef = useRef<HTMLElement | null>(null);
 
@@ -68,11 +68,21 @@ export function ModalShell({ open, titleId, onOpenChange, children, className }:
   };
 
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4" role="presentation">
+    <div
+      className={cn(
+        'ui-modal-overlay',
+        fullScreen ? 'ui-modal-layout-full' : 'ui-modal-layout-center'
+      )}
+      role="presentation"
+    >
       <section
         aria-labelledby={titleId}
         aria-modal="true"
-        className={cn(mediaPanel(), 'w-full max-w-md p-4 shadow-lg outline-none', className)}
+        className={cn(
+          'ui-modal-frame ui-elevation-modal',
+          fullScreen ? 'ui-modal-frame-large' : 'ui-modal-frame-small',
+          className
+        )}
         onKeyDown={onKeyDown}
         ref={containerRef}
         role="dialog"

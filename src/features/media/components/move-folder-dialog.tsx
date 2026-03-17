@@ -21,10 +21,10 @@ export function MoveFolderDialog({ open, folderTree, folderId, onOpenChange, onS
 
   return (
     <ModalShell onOpenChange={onOpenChange} open={open} titleId="move-folder-dialog-title">
-      <h2 className="text-base font-semibold" id="move-folder-dialog-title">
+      <h2 className="ui-type-body-1-strong" id="move-folder-dialog-title">
         Move folder...
       </h2>
-      <p className="mt-1 text-sm text-muted-foreground">Choose a destination parent folder.</p>
+      <p className="ui-type-body-2 ui-type-muted mt-1">Choose a destination parent folder.</p>
 
       <div className="mt-4 space-y-2">
         <button className={mediaButton({ variant: 'outline', size: 'md' })} onClick={() => onSubmit(null)} type="button">

@@ -1,5 +1,6 @@
 import { useState, type KeyboardEvent } from 'react';
-import { mediaChip } from '@/features/media/components/media-ui.variants';
+import { Input } from '@/components/ui/input';
+import { Tag } from '@/components/ui/tag';
 
 type TagsChipInputProps = {
   id: string;
@@ -35,27 +36,24 @@ export function TagsChipInput({ id, label, value, onChange, placeholder = 'Add t
 
   return (
     <div>
-      <label className="mb-1 block text-sm font-medium" htmlFor={id}>
+      <label className="ui-type-body-2-strong mb-1 block" htmlFor={id}>
         {label}
       </label>
       <div className="rounded-md border border-input bg-background p-2">
         <div className="mb-2 flex flex-wrap gap-1">
           {value.map((tag) => (
-            <span className={mediaChip({ tone: 'neutral' })} key={tag}>
+            <Tag
+              closeable
+              key={tag}
+              onClose={() => onChange(value.filter((item) => item !== tag))}
+              tone="gray"
+            >
               {tag}
-              <button
-                aria-label={`Remove ${tag}`}
-                className="text-muted-foreground hover:text-foreground"
-                onClick={() => onChange(value.filter((item) => item !== tag))}
-                type="button"
-              >
-                ×
-              </button>
-            </span>
+            </Tag>
           ))}
         </div>
-        <input
-          className="h-8 w-full rounded border border-input bg-background px-2 text-sm"
+        <Input
+          className="h-8 px-2"
           id={id}
           onBlur={commitTag}
           onChange={(event) => setDraft(event.target.value)}

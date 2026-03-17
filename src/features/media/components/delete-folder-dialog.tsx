@@ -34,16 +34,16 @@ export function DeleteFolderDialog({
 
   return (
     <ModalShell className="max-w-lg" onOpenChange={onOpenChange} open={open} titleId="delete-folder-dialog-title">
-      <h2 className="text-base font-semibold" id="delete-folder-dialog-title">
+      <h2 className="ui-type-body-1-strong" id="delete-folder-dialog-title">
         Delete folder
       </h2>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Delete <span className="font-medium text-foreground">{folderName ?? 'this folder'}</span>.
+      <p className="ui-type-body-2 ui-type-muted mt-1">
+        Delete <span className="ui-type-body-2-strong text-foreground">{folderName ?? 'this folder'}</span>.
       </p>
 
       {requiresMoveContents ? (
         <div className="mt-4 rounded-md border border-border bg-muted/40 p-3">
-          <p className="text-sm">This folder contains assets. Choose where to move them first.</p>
+          <p className="ui-type-body-2">This folder contains assets. Choose where to move them first.</p>
           <div className="mt-2 space-y-2">
             <button className={mediaButton({ variant: 'outline', size: 'md' })} onClick={() => setMoveTarget(null)} type="button">
               Move to root

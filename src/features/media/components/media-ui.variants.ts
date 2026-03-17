@@ -1,7 +1,7 @@
 import { cn } from '@/lib/cn';
 
 export function mediaPanel(): string {
-  return 'rounded-xl border border-border bg-card text-card-foreground shadow-sm';
+  return 'rounded-xl border border-border bg-card text-card-foreground ui-elevation-surface';
 }
 
 type ButtonVariant = 'default' | 'danger' | 'outline' | 'ghost' | 'subtle';
@@ -12,13 +12,13 @@ export function mediaButton(opts?: { variant?: ButtonVariant; size?: ButtonSize 
   const size = opts?.size ?? 'md';
 
   return cn(
-    'inline-flex items-center justify-center rounded-md border text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action disabled:pointer-events-none disabled:opacity-50',
-    size === 'sm' ? 'h-8 px-2 text-xs' : 'h-9 px-3 text-sm',
-    variant === 'default' && 'border-action bg-action text-action-foreground hover:bg-action-hover',
-    variant === 'danger' && 'border-destructive bg-destructive text-destructive-foreground hover:bg-destructive/90',
-    variant === 'outline' && 'border-input bg-background hover:bg-muted',
-    variant === 'ghost' && 'border-transparent text-foreground hover:bg-muted',
-    variant === 'subtle' && 'border-border bg-muted/60 text-foreground hover:bg-muted'
+    'ui-button disabled:pointer-events-none',
+    size === 'sm' ? 'ui-button-size-small' : 'ui-button-size-default',
+    variant === 'default' && 'ui-button-primary',
+    variant === 'danger' && 'ui-button-danger',
+    variant === 'outline' && 'ui-button-outline',
+    variant === 'ghost' && 'ui-button-ghost',
+    variant === 'subtle' && 'ui-button-ghost bg-muted/60'
   );
 }
 
@@ -27,10 +27,10 @@ type ChipTone = 'neutral' | 'selected' | 'danger';
 export function mediaChip(opts?: { tone?: ChipTone }): string {
   const tone = opts?.tone ?? 'neutral';
   return cn(
-    'inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action',
-    tone === 'neutral' && 'border-border bg-muted/70 text-foreground hover:bg-muted',
-    tone === 'selected' && 'border-selection-border bg-selection-soft text-selection-foreground hover:bg-selection-soft/80',
-    tone === 'danger' && 'border-destructive/40 bg-destructive/10 text-destructive hover:bg-destructive/15'
+    'ui-tag ui-tag-size-small ui-tag-clickable',
+    tone === 'neutral' && 'ui-tag-tone-gray',
+    tone === 'selected' && 'ui-tag-tone-primary',
+    tone === 'danger' && 'ui-tag-tone-danger'
   );
 }
 
@@ -53,8 +53,8 @@ export function selectableSurface(opts?: { selected?: boolean; disabled?: boolea
   const disabled = opts?.disabled ?? false;
 
   return cn(
-    'rounded-lg border border-border bg-card text-card-foreground shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action',
-    selected ? 'border-selection-border bg-selection-soft shadow-md' : 'hover:border-selection-border/50 hover:bg-muted/40',
+    'rounded-lg border border-border bg-card text-card-foreground ui-elevation-surface transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action',
+    selected ? 'border-selection-border bg-selection-soft ui-elevation-selected' : 'hover:border-selection-border/50 hover:bg-muted/40',
     disabled && 'pointer-events-none opacity-60'
   );
 }

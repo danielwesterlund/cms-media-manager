@@ -16,18 +16,18 @@ type UploadTrayProps = {
 export function UploadTray({ jobs, onCancel, onRetry, onRemove, onCopyError }: UploadTrayProps) {
   return (
     <section aria-label="Upload tray" className={cn(mediaPanel(), 'p-3')}>
-      <h2 className="mb-2 text-sm font-semibold">Uploads</h2>
+      <h2 className="ui-type-body-2-strong mb-2">Uploads</h2>
 
       {jobs.length === 0 ? (
-        <p className="text-sm text-muted-foreground">No uploads in progress.</p>
+        <p className="ui-type-body-2 ui-type-muted">No uploads in progress.</p>
       ) : (
         <ul className="space-y-2">
           {jobs.map((job) => (
-            <li className="rounded-lg border border-border bg-background/70 p-2 shadow-sm" key={job.id}>
+            <li className="rounded-lg border border-border bg-background/70 p-2 ui-elevation-surface" key={job.id}>
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium">{job.fileName}</p>
-                  <p className="text-xs text-muted-foreground">{statusLabel(job)}</p>
+                  <p className="ui-type-body-2-strong truncate">{job.fileName}</p>
+                  <p className="ui-type-small-1 ui-type-muted">{statusLabel(job)}</p>
                 </div>
                 <div className="flex items-center gap-1">
                   <span className={mediaBadge({ tone: 'neutral' })}>{ext(job.fileName)}</span>

@@ -15,12 +15,12 @@ export function MediaAssetIcon({ asset, className }: MediaAssetIconProps) {
     <div
       aria-hidden="true"
       className={cn(
-        'inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-muted text-xs font-semibold text-muted-foreground',
+        'ui-type-small-1 ui-type-muted inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-muted',
         className
       )}
       title={label}
     >
-      <span className="material-symbols-outlined text-muted-foreground">{kindIcon(asset.kind)}</span>
+      <span className="material-symbols-outlined ui-type-muted">{kindIcon(asset.kind)}</span>
     </div>
   );
 }

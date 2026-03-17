@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 
+import { Radio } from '@/components/ui/radio';
 import { mediaButton } from '@/features/media/components/media-ui.variants';
 import type { FolderNode } from '@/features/media/domain/media.types';
 import { ModalShell } from '@/features/media/components/modal-shell';
@@ -28,14 +29,14 @@ export function MoveToFolderDialog({ open, folderTree, selectedCount, onOpenChan
 
   return (
     <ModalShell onOpenChange={onOpenChange} open={open} titleId="move-to-folder-dialog-title">
-      <h2 className="text-base font-semibold" id="move-to-folder-dialog-title">
+      <h2 className="ui-type-body-1-strong" id="move-to-folder-dialog-title">
         Move selected assets
       </h2>
-      <p className="mt-1 text-sm text-muted-foreground">{selectedCount} selected. Choose destination folder.</p>
+      <p className="ui-type-body-2 ui-type-muted mt-1">{selectedCount} selected. Choose destination folder.</p>
 
       <div className="mt-4">
         <div className="mb-2 flex items-center justify-between">
-          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Folders</p>
+          <p className="ui-type-small-2 ui-type-muted">Folders</p>
           <button
             className={mediaButton({ variant: 'outline', size: 'sm' })}
             onClick={() => setSortOrder((current) => (current === 'asc' ? 'desc' : 'asc'))}
@@ -46,26 +47,22 @@ export function MoveToFolderDialog({ open, folderTree, selectedCount, onOpenChan
         </div>
 
         <div className="max-h-64 space-y-1 overflow-auto rounded-md border border-border bg-background p-2">
-          <label className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-sm hover:bg-muted">
-            <input
-              checked={selectedFolderId === null}
-              name="move-target-folder"
-              onChange={() => setSelectedFolderId(null)}
-              type="radio"
-            />
-            <span>Root</span>
-          </label>
-
+          <Radio
+            checked={selectedFolderId === null}
+            className="w-full rounded px-2 py-1 hover:bg-muted"
+            label="Root"
+            name="move-target-folder"
+            onChange={() => setSelectedFolderId(null)}
+          />
           {options.map((option) => (
-            <label className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-sm hover:bg-muted" key={option.id}>
-              <input
-                checked={selectedFolderId === option.id}
-                name="move-target-folder"
-                onChange={() => setSelectedFolderId(option.id)}
-                type="radio"
-              />
-              <span className="truncate">{option.plainLabel}</span>
-            </label>
+            <Radio
+              checked={selectedFolderId === option.id}
+              className="w-full rounded px-2 py-1 hover:bg-muted"
+              key={option.id}
+              label={<span className="truncate">{option.plainLabel}</span>}
+              name="move-target-folder"
+              onChange={() => setSelectedFolderId(option.id)}
+            />
           ))}
         </div>
       </div>

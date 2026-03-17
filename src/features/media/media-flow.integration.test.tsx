@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
-import { Toaster } from 'sonner';
+import { NotificationToaster } from '@/components/ui/notification';
 
 import { MediaLibraryPage } from '@/pages/media/media-library-page';
 
@@ -20,7 +20,7 @@ describe('media flow integration', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
-        <Toaster richColors />
+        <NotificationToaster />
       </QueryClientProvider>
     );
 

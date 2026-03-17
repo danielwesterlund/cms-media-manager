@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import { toast } from 'sonner';
+import { notify } from '@/components/ui/notification';
 
+import { Button } from '@/components/ui/button';
 import { DeleteFolderDialog } from '@/features/media/components/delete-folder-dialog';
 import { FolderNameDialog } from '@/features/media/components/folder-name-dialog';
 import { FolderTreePanel } from '@/features/media/components/folder-tree-panel';
@@ -63,10 +64,10 @@ export function FolderTreePanelContainer() {
   const submitCreate = async (name: string) => {
     try {
       await mutations.createFolder.mutateAsync({ parentId: dialogFolderId, name });
-      toast.success('Folder created.');
+      notify.success('Folder created.');
       setDialogMode(null);
     } catch (error) {
-      toast.error(asErrorMessage(error));
+      notify.error(asErrorMessage(error));
     }
   };
 
@@ -74,10 +75,10 @@ export function FolderTreePanelContainer() {
     if (!dialogFolderId) return;
     try {
       await mutations.renameFolder.mutateAsync({ id: dialogFolderId, name });
-      toast.success('Folder renamed.');
+      notify.success('Folder renamed.');
       setDialogMode(null);
     } catch (error) {
-      toast.error(asErrorMessage(error));
+      notify.error(asErrorMessage(error));
     }
   };
 
@@ -85,10 +86,10 @@ export function FolderTreePanelContainer() {
     if (!dialogFolderId) return;
     try {
       await mutations.moveFolder.mutateAsync({ id: dialogFolderId, newParentId });
-      toast.success('Folder moved.');
+      notify.success('Folder moved.');
       setDialogMode(null);
     } catch (error) {
-      toast.error(asErrorMessage(error));
+      notify.error(asErrorMessage(error));
     }
   };
 
@@ -100,48 +101,48 @@ export function FolderTreePanelContainer() {
         id: dialogFolderId,
         strategy: { moveContentsToFolderId }
       });
-      toast.success('Folder deleted.');
+      notify.success('Folder deleted.');
       setDialogMode(null);
     } catch (error) {
       const message = asErrorMessage(error);
       if (message.includes('Folder has content')) {
         setDeleteNeedsMoveFlow(true);
-        toast.error('This folder has content. Choose a destination first.');
+        notify.error('This folder has content. Choose a destination first.');
         return;
       }
-      toast.error(message);
+      notify.error(message);
     }
   };
 
   const submitMoveAssets = async (folderId: string | null) => {
     if (selectedAssetIds.length === 0) {
-      toast.error('Select assets first.');
+      notify.error('Select assets first.');
       return;
     }
 
     try {
       await mutations.moveAssets.mutateAsync({ assetIds: selectedAssetIds, folderId });
       clearSelection();
-      toast.success('Assets moved.');
+      notify.success('Assets moved.');
       setDialogMode(null);
     } catch (error) {
-      toast.error(asErrorMessage(error));
+      notify.error(asErrorMessage(error));
     }
   };
 
   const dropAssetsToFolder = async (folderId: string | null, assetIds: string[]) => {
     setDropTargetFolderId(undefined);
     if (assetIds.length === 0) {
-      toast.error('Drag one or more assets to a folder.');
+      notify.error('Drag one or more assets to a folder.');
       return;
     }
 
     try {
       await mutations.moveAssets.mutateAsync({ assetIds, folderId });
       clearSelection();
-      toast.success(`Moved ${assetIds.length} asset${assetIds.length === 1 ? '' : 's'}.`);
+      notify.success(`Moved ${assetIds.length} asset${assetIds.length === 1 ? '' : 's'}.`);
     } catch (error) {
-      toast.error(asErrorMessage(error));
+      notify.error(asErrorMessage(error));
     }
   };
 
@@ -167,13 +168,14 @@ export function FolderTreePanelContainer() {
           tree={tree}
         />
 
-        <button
-          className="w-full rounded-md border border-input px-3 py-2 text-sm hover:bg-muted"
+        <Button
+          className="px-0"
+          disabled={selectedAssetIds.length === 0}
           onClick={() => setDialogMode('move-assets')}
-          type="button"
+          variant="link"
         >
           Move selected assets...
-        </button>
+        </Button>
       </div>
 
       <FolderNameDialog
