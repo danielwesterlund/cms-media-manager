@@ -22,24 +22,79 @@ This repository contains the v2 UI for:
 
 ## Getting Started
 
-### 1. Prerequisites
+### 1. Before you start (Windows)
 
-- Node.js 18+ (recommended: latest LTS)
-- npm (or pnpm)
+You need **Node.js** installed on your computer.
 
-### 2. Install dependencies
+1. Go to [https://nodejs.org](https://nodejs.org)
+2. Download and install the **LTS** version
+3. During install, keep the default options
+4. Restart your terminal after installation
 
-```bash
+To check it worked, open **PowerShell** and run:
+
+```powershell
+node -v
+npm -v
+```
+
+If both commands show version numbers, you’re ready.
+
+### 2. Download this project
+
+If you already have the project folder, skip this step.
+
+Otherwise:
+- Download ZIP from GitHub and extract it, or
+- Clone with Git (for developers)
+
+### 3. Open the project in PowerShell
+
+1. Open the project folder in File Explorer
+2. Click the address bar, type `powershell`, and press Enter
+3. A PowerShell window opens in that folder
+
+### 4. Install dependencies (one-time)
+
+Run:
+
+```powershell
 npm install
 ```
 
-### 3. Start development server
+This may take a few minutes the first time.
 
-```bash
+### 5. Start the app
+
+Run:
+
+```powershell
 npm run dev
 ```
 
-Open the local URL shown in your terminal (typically `http://localhost:5173`).
+After it starts, open the local URL shown in the terminal (usually `http://localhost:5173`).
+
+### 6. Stop the app
+
+In the PowerShell window, press:
+
+`Ctrl + C`
+
+## Quick Troubleshooting (Windows)
+
+- If `npm` is not recognized:
+  - Node.js is not installed correctly, or terminal was open during install
+  - Reinstall Node.js LTS and reopen PowerShell
+- If install fails with network errors:
+  - Check VPN/proxy/firewall settings
+  - Try again on a stable connection
+- If the dev server port is busy:
+  - Close other running dev servers and run `npm run dev` again
+
+## For Developers (Optional)
+
+- Node.js 18+ (latest LTS recommended)
+- Package manager used in this repo: `npm` (works with `pnpm` too)
 
 ## Scripts
 
